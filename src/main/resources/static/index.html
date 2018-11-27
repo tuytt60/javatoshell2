@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>欢迎使用Html操作Shell工具</title>
+</head>
+
+<body>
+<span>请输入要连接的Ip</span>
+<span><input id="ipAddress" type="text" value="192.168.53.244"/></span>
+<span>请输入服务器用户名</span>
+<span><input id="userName" type="text" value="root"/></span>
+<span>请输入服务器密码</span>
+<span><input id="userPass" type="password" value="amssy@123"/></span>
+<span><button onclick="connectWebSocket()">连接</button></span>
+<span><button onclick="closeWebSocket()">断开</button></span>
+
+
+
+
+
+<textarea id="message" style="height: 40em;width: 90em" readonly="readonly">
+</textarea>
+
+</body>
+
+<script type="text/javascript">
+    var websocket = null;
+
+    var message = document.getElementById("message");
+
+    document.onkeydown=function(e){
+        console.log(window.event);
+        if(document.activeElement == message) {
+            var key  =window.event.key;
+
+            if(window.event.ctrlKey && 'c' == window.event.key){
+                key='stopCommond';
+            }
+
+            websocket.send(key);
+
+
+            if('Tab' == key){
+                //不让切出去了
+                return false;
+            }
+        }
+
+
+    }
+
+    function connectWebSocket() {
+
+        //判断当前浏览器是否支持WebSocket
+        if ('WebSocket' in window) {
+            websocket = new WebSocket("ws://localhost:8084/websocket" +
+                "/" + document.getElementById('ipAddress').value +
+                "/" + document.getElementById('userName').value +
+                "/" + document.getElementById('userPass').value);
+        }
+        else {
+            alert('Not support websocket')
+        }
+
+        //连接发生错误的回调方法
+        websocket.onerror = function () {
+            setMessageInnerHTML("error");
+        };
+
+        //连接成功建立的回调方法
+        websocket.onopen = function (event) {
+            // setMessageInnerHTML("open");
+        }
+
+        //接收到消息的回调方法
+        websocket.onmessage = function (event) {
+            // console.log(event)
+            //清空区域
+            document.getElementById('message').value ='';
+
+            setMessageInnerHTML(event.data);
+        }
+
+        //连接关闭的回调方法
+        websocket.onclose = function () {
+            setMessageInnerHTML("close");
+        }
+
+        //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+        window.onbeforeunload = function () {
+            websocket.close();
+        }
+    }
+
+
+    //将消息显示在网页上
+    function setMessageInnerHTML(innerHTML) {
+        document.getElementById('message').value += innerHTML;
+    }
+
+    //关闭连接
+    function closeWebSocket() {
+        websocket.close();
+    }
+
+</script>
+</html>
