@@ -8,11 +8,11 @@
 
 <body>
 <span>请输入要连接的Ip</span>
-<span><input id="ipAddress" type="text" value="192.168.53.244"/></span>
+<span><input id="ipAddress" type="text" value=""/></span>
 <span>请输入服务器用户名</span>
-<span><input id="userName" type="text" value="root"/></span>
+<span><input id="userName" type="text" value=""/></span>
 <span>请输入服务器密码</span>
-<span><input id="userPass" type="password" value="amssy@123"/></span>
+<span><input id="userPass" type="password" value=""/></span>
 <span><button onclick="connectWebSocket()">连接</button></span>
 <span><button onclick="closeWebSocket()">断开</button></span>
 
@@ -55,7 +55,7 @@
 
         //判断当前浏览器是否支持WebSocket
         if ('WebSocket' in window) {
-            websocket = new WebSocket("ws://localhost:8084/websocket" +
+            websocket = new WebSocket("ws://localhost:10086/websocket" +
                 "/" + document.getElementById('ipAddress').value +
                 "/" + document.getElementById('userName').value +
                 "/" + document.getElementById('userPass').value);
