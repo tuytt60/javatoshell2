@@ -16,11 +16,12 @@ public class MainCommand {
     private static String DEFAULTCHART = "UTF-8";
     private static Session session = null;
 
-    private static Connection login(String ip, String username, String password) {
+    private static Connection login(String ip, int port,String username, String password) {
         boolean flag = false;
         Connection connection = null;
         try {
-            connection = new Connection(ip);
+//            connection = new Connection(ip);
+            connection = new Connection(ip, port);
             connection.connect();// 连接
             flag = connection.authenticateWithPassword(username, password);// 认证
             if (flag) {
@@ -102,12 +103,14 @@ public class MainCommand {
 
     public static void main(String[] args) {
         long currentTimeMillis = System.currentTimeMillis();
-        String ip = "192.168.25.128";
+        String ip = "106.74.18.63";
+        int port = 22001;
         String username = "root";
-        String password = "123456";
+        String password = "htyw123!";
+//        String password = "123456";
 //        String cmd = "uname -a";
         String cmd = "ls -l";
-        Connection connection = login(ip, username, password);
+        Connection connection = login(ip, port, username, password);
         String execmd = execmd(connection, cmd);
         System.out.println(execmd);
         long currentTimeMillis1 = System.currentTimeMillis();
